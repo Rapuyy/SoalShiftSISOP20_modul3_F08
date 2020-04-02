@@ -7,11 +7,12 @@ int main()
 {
     key_t key = 1234;
     int *value;
-    int multiply[4][5];
     int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
     value = shmat(shmid, NULL, 0);
 
-    int c, d, k;
+    int multiply[4][5];
+
+    int baris, kolom, tengah;
     int sum = 0;
     int first[4][2] = {{1, 2},
                     {3, 4},
@@ -19,26 +20,30 @@ int main()
                     {7, 8}};
     int second[2][5] = {{1, 2, 3, 4, 5},
                       {6, 7, 8, 9, 10}};
-    // int multiply[4][5];
 
 
 
-    for (c = 0; c < 4; c++) {
-      for (d = 0; d < 5; d++) {
-        for (k = 0; k < 2; k++) {
-          sum = sum + first[c][k]*second[k][d];
+    for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++) {
+        for (tengah = 0; tengah < 2; tengah++) {
+          sum = sum + first[baris][tengah]*second[tengah][kolom];
         }
  
-        multiply[c][d] = sum;
+        multiply[baris][kolom] = sum;
         sum = 0;
       }
     }
  
-    printf("Product of the matrices:\n");
- 
-    for (c = 0; c < 4; c++) {
-      for (d = 0; d < 5; d++){
-      *value = multiply[c][d];
+    printf("Hasil Matriks:\n");
+     for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++){
+        printf("%d\t", multiply[baris][kolom]);
+      }
+      printf("\n");
+    }
+    for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++){
+      *value = multiply[baris][kolom];
       sleep(1);
       printf("terkirimz %d \n", *value);
       }
