@@ -24,7 +24,11 @@ void *playing(void *arg)
     while(1)
     {
         char ch = getchar();
-        if(ch == ' ') send(*(int*) arg, &ch, sizeof(ch), 0);
+        if(ch == ' ') 
+        {
+            printf("hit !!\n");
+            send(*(int*) arg, &ch, sizeof(ch), 0);
+        }
     }
 }
 
@@ -59,17 +63,20 @@ int main(int argc, char const *argv[])
     }
     char cmd[1024], cmd2[1024], username[1024], pass[1024], temp[1024];
     screen1:
-    printf("1. Login:\n2. Register\nChoices : ");
+    //goto screen2;
+    printf("1. Login\n2. Register\nChoices : ");
     scanf("%s", cmd);
     if(strcmp(cmd, "login") == 0)
     {
         strcpy(username, "l ");
         printf("Username : ");
-        scanf("%s", temp);
+        getchar();
+        scanf("%[^\n]", username);
         strcat(username, temp);
         printf("Password : ");
-        scanf("%s", pass);
-        strcat(username, " ");
+        getchar();
+        scanf("%[^\n]", pass);
+        strcat(username, "\t");
         strcat(username, pass);
         send(sock, username, strlen(username), 0);
         int feedback;
@@ -98,7 +105,7 @@ int main(int argc, char const *argv[])
                 struct termios prev, cur;
                 tcgetattr(0, &prev);
                 cur = prev;
-                cur.c_lflag &= - ICANON;
+                cur.c_lflag &= -ICANON;
                 cur.c_lflag &= -ECHO;
                 tcsetattr(0, TCSANOW, &cur);
                 pthread_t th2;
@@ -135,11 +142,13 @@ int main(int argc, char const *argv[])
     {
         strcpy(username, "r ");
         printf("Username : ");
-        scanf("%s", temp);
+        getchar();
+        scanf("%[^\n]", temp);
         strcat(username, temp);
         printf("Password : ");
-        scanf("%s", pass);
-        strcat(username, " ");
+        getchar();
+        scanf("%[^\n]", pass);
+        strcat(username, "\t");
         strcat(username, pass);
         send(sock, username, strlen(username), 0);
         printf("register success\n");
