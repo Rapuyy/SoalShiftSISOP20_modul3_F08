@@ -42,7 +42,7 @@ void *ready(void *arg)
         int id = 0;
         for(int i = 2; i < strlen(data); i++)
         {
-            if(data[i] == ' ') break;
+            if(data[i] == '\t') break;
             un[id] = data[i];
             id++;
         }
@@ -55,7 +55,7 @@ void *ready(void *arg)
             id2++;
         }
         //ps[id2] = '\0';
-        printf("debug: %s - %s\n", un, ps);
+        //printf("debug: %s - %s\n", un, ps);
         if(kode == 'l')
         {
             bool done = 0;
@@ -87,7 +87,7 @@ void *ready(void *arg)
             while(file_cek);
             file_cek = 1;
             FILE *fptr = fopen("akun.txt", "a");
-            fprintf(fptr, "%s %s\n", un, ps);
+            fprintf(fptr, "%s\t%s\n", un, ps);
             fclose(fptr);
             file_cek = 0;
             akun_cek = 0;
@@ -125,7 +125,7 @@ void *play(void *arg)
         char ch;
         read(p.cidp, &ch, sizeof(ch));
         *he -= 10;
-        send(p.cide, &he, sizeof(he), 0);
+        send(p.cide, he, sizeof(*he), 0);
     }
 }
 
@@ -171,7 +171,7 @@ int main(int argc, char const *argv[])
     int id = 0;
     fp = fopen("akun.txt", "a+");
     if(fp == NULL) exit(0);
-    while(fscanf(fp, "%s %s\n", un, ps) != EOF)
+    while(fscanf(fp, "%[^\t]\t%[^\n]\n", un, ps) != EOF)
     {
         akun akun_baru;
         strcpy(akun_baru.un, un);
@@ -206,8 +206,6 @@ int main(int argc, char const *argv[])
 
     while(1)
     {
-        pthread_join(th[0], NULL);
-        pthread_join(th[1], NULL);
         bool player1_cek = 0;
         bool player2_cek = 0;
         int health1 = 100;
@@ -247,6 +245,8 @@ int main(int argc, char const *argv[])
             p.login = 1;
             pthread_create(&th[i], NULL, ready, (void *) &p);
         }
+        pthread_join(th[0], NULL);
+        pthread_join(th[1], NULL);
     }
     return 0;
 }
