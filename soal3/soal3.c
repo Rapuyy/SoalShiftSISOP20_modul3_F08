@@ -30,9 +30,8 @@ int is_regular_file(const char *path) //jika 0 bukan file
 }
 
 void pindahFile(char *argv, char *cwd){
-  // char string[] = "/home/rapuyy/modul3/no3.c";
-  printf("stringvoid = %s\n", argv);
-  printf("stringvoid = %s\n", cwd);
+//   printf("stringvoid = %s\n", argv);
+//   printf("stringvoid = %s\n", cwd);
   
   char string[1000];
   strcpy(string, argv);
@@ -57,65 +56,36 @@ void pindahFile(char *argv, char *cwd){
   {
     if(!isFile){
       printf("ini adalah folder, salah argumen\n");
-      mkdir(nama, 0777);
+    //   mkdir(nama, 0777);
       return;
     }
     else
     {
-      strcpy(tipeLow, " Unknown");
+      strcpy(tipeLow, " Unknown"); //tanpa ekstensi
     }
   }
-    
-  mkdir((tipeLow + 1), 0777);
+    mkdir((tipeLow + 1), 0777); //bikin folder ekstensi
 
+    size_t len = 0 ;
+    // strcpy
+    char a[1000] ; //res
+    strcpy(a, argv);
+    char b[1000] ; //des
+    strcpy(b, cwd);
+    strcat(b, "/");
+    strcat(b, tipeLow+1);
+    strcat(b, nama);
+    printf("a = %s\n", a);
 
-  // printf("Current working void dir: %s\n", cwd);
-  // printf("file : %s\n", argv);
-  size_t len = 0 ;
-  // strcpy
-  char a[1000] ; //res
-  strcpy(a, argv);
-  char b[1000] ; //des
-  strcpy(b, cwd);
-  strcat(b, "/");
-  strcat(b, tipeLow+1);
-  strcat(b, nama);
-  printf("b = %s\n", b);
+    printf("b = %s\n", b);
 
-  char buffer[BUFSIZ] = { '\0' } ;
-
-  FILE* in = fopen( a, "rb" ) ;
-  FILE* out = fopen( b, "wb" ) ;
-
-  if( in == NULL || out == NULL )
-  {
-      perror( "An error occured while opening files!!!" ) ;
-      in = out = 0 ;
-  }
-  else    // add this else clause
-  {
-      while( (len = fread( buffer, BUFSIZ, 1, in)) > 0 )
-      {
-          fwrite( buffer, BUFSIZ, 1, out ) ;
-      }
-  
-      fclose(in) ;
-      fclose(out) ;
-      if(!remove(a))
-      {
-         printf( "File successfully moved\n");
-      }
-      else
-      {
-        printf( "An error occured while moving the file!!!\n" ) ;
-      }
-      
-  }
+    rename(a, b);
+    remove(a);
 }
 
 void *pindahf(void* arg){
   arg_struct args = *(arg_struct*) arg;
-  printf("stringthr = %s\n", args.asal);
+//   printf("stringthr = %s\n", args.asal);
   // printf("stringthr = %s\n", args.cwd);
   pindahFile(args.asal, args.cwd);
   pthread_exit(0);
@@ -134,7 +104,7 @@ void sortHere(char *asal){
       if(entry->d_type == DT_REG)
       {
         char namafile[105];
-        sprintf(namafile, "/home/rapuyy/modul3/%s", entry->d_name);
+        sprintf(namafile, "%s/%s", asal, entry->d_name);
         strcpy(args.asal, namafile);
         if(strcmp(namafile, "/home/rapuyy/modul3/no3.c")!=0)
         {
@@ -161,25 +131,32 @@ int main(int argc, char* argv[])
     for (int i = 2; i < argc; i++)
     {
       strcpy(args.asal, argv[i]);
-      // printf("string awal %s\n",  argv[i]);
       pthread_create(&tid[index], NULL, pindahf, (void *)&args);
       sleep(1);
       index++;
-      // printf("string asal = %s\n", args.asal);
     }
     for (int i = 0; i < index; i++) {
         pthread_join(tid[i], NULL);
     }
   }
-  if(strcmp(argv[1],"*")==0)
+  else if(strcmp(argv[1],"*")==0)
   {
     char asal[] = "/home/rapuyy/modul3";
+    
     sortHere(asal);
   }
-  if(strcmp(argv[1],"-d")==0){
+  else if(strcmp(argv[1],"-d")==0){
       char asal[1000];
       strcpy(asal, argv[2]);
       sortHere(asal);
+    //   rename(asal, args.cwd);
+    //   sortHere(asal);
   }
+  else
+  {
+      printf("salah argumen bos\n");
+      return 0;
+  }
+  
 	return 0; 
 } 
