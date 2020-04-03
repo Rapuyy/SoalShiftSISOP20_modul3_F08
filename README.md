@@ -15,7 +15,7 @@ Soal ini meminta kami untuk membuat game berbasis text terminal mirip game Pokem
 Solusi soal ini terdiri dari 2 file yaitu ```soal1_traizone.c``` dan ```soal1_pokezone.c```.
 Untuk menyelesaikan soal ini, kami menggunakan multithreading untuk menjalankan beberapa proses secara paralel (misal meng-handle perhitungan masing-masing Pokemon yang dimiliki), shared memory untuk menyimpan value stok Shop yang diakses baik di file ```soal1_traizone.c``` maupun ```soal1_pokezone.c```, serta fork-exec agar saat mengeksekusi ```soal1_pokezone.c``` dan memberikan command Quit, maka program ```soal1_traizone.c``` akan berhenti (di-kill).
 
-Untuk spurce code ```soal1_traizone.c``` terdiri dari 2 mode, yaitu:
+Untuk source code ```soal1_traizone.c``` terdiri dari 2 mode, yaitu:
 1. Normal Mode
 2. Capture Mode
 
@@ -518,6 +518,19 @@ while(wait(&stat) > 0);
 #
 
 ## Soal2
+Soal ini meminta kami untuk membuat online game berbasis text console bernama Tap Tap Game.
+Solusi soal ini terdiri dari 2 file yaitu ```soal2_tapserver.c``` dan ```soal2_tapplayer.c```.
+Untuk menyelesaikan soal ini, kami menggunakan socket dan threading untuk mengkomunikasikan antara server dan client, serta thread agar game dapat berjalan secara paralel untuk masing-masing player.
+Soal ini terdiri dari 2 sisi, yaitu:
+1. Client Side
+2. Server Side
+
+#
+
+### Client Side
+Pada Client Side, terdapat 2 screen tampilan, yaitu **Screen 1** untuk menangani login dan register akun, sedangkan **Screen 2** untuk mencari player lawan agar game dapat dimulai. 
+
+#
 
 ## Soal3
 
