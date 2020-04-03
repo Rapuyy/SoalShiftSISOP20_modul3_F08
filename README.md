@@ -527,7 +527,7 @@ Soal ini terdiri dari 2 sisi, yaitu:
 
 #
 
-### Client Side
+## Client Side
 Pada Client Side, terdapat 2 screen tampilan, yaitu **Screen 1** untuk menangani login dan register akun, sedangkan **Screen 2** untuk mencari player lawan agar game dapat dimulai.
 
 #
@@ -677,7 +677,7 @@ Untuk screen 2, akan ada 2 thread yang dijalankan thread pertama untuk mencetak 
 
 #
 
-### Server Side
+## Server Side
 Pada Server Side, digunakan untuk verifikasi client yang sedang login/register, untuk penyimpanan data ke ```akun.txt```, serta pengecekan data saat login apakah akun sudah terdaftar. Kemudian pada server side, juga berfungsi untuk mencari player-player yang dapat saling terkoneksi, ketika banyak yang terkoneksi ada 2 player, maka game akan segera dimulai. Ketika sudah selesai, maka koneksi mereka akan diputus menjadi bukan yang sedang bermain. Ruang bermain hanya dibatasi 2 player saja, yang masing-masing mempunyai thread sendiri.
 
 Untuk menyimpan data suatu player, yaitu thread sendiri, thread musuh, health sendiri, dan health musuh, digunakan struct player yang menyimpan itu semua, agar saat menjalankan thread player, dapat langsung melakukan passing semua data player.
