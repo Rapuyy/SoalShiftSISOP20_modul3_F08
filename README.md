@@ -478,17 +478,22 @@ exit(1);
 Digunakan pula fork-exec untuk menghentikan berjalannya game ini. Dengan menggunakan command ```bash kill``` yang dipanggil dengan mencari tahu dulu pid proses ```soal1_traizone.c``` yang ingin dihentikan. Dengan cara masuk ke dir ```/proc``` dan mencari file ```soal1_traizone.c```, kemudian akan digunakan perintah ```fork``` dan ```execv``` untuk meng-kill PID proses tersebut. Setelah selesai meng-kill traizone, maka proses pokezone juga sudah selesai dan langsung berhenti juga.
 Source code:
 ```c
-DIR *d = opendir("/proc");
-struct dirent *e;
-char *endp;
-while((e = readdir(d)) != NULL)
+struct dirent *dp;
+DIR *dfd;
+if((dfd = opendir("/proc")) == NULL)
 {
-	long pid = strtol(e->d_name, &endp, 10);
+	fprintf(stderr, "Can't open /proc\n");
+	return 0;
+}
+char *endp;
+while((dp = readdir(dfd)) != NULL)
+{
+	long pid = strtol(dp->d_name, &endp, 10);
 	if(*endp != '\0') continue;
 	char buffer[1024];
 	snprintf(buffer, sizeof(buffer), "/proc/%ld/cmdline", pid);
 	FILE *f = fopen(buffer, "r");
-	if(f)
+	if(f != NULL)
 	{
 		if(fgets(buffer, sizeof(buffer), f) != NULL) 
 		{
@@ -510,7 +515,7 @@ while((e = readdir(d)) != NULL)
 		fclose(f);
 	}
 }
-closedir(d);
+closedir(dfd);
 int stat;
 while(wait(&stat) > 0);
 ```
@@ -519,7 +524,7 @@ while(wait(&stat) > 0);
 
 ## Soal2
 Soal ini meminta kami untuk membuat online game berbasis text console bernama Tap Tap Game.
-Solusi soal ini terdiri dari 2 file yaitu ```soal2_tapserver.c``` dan ```soal2_tapplayer.c```.
+Solusi soal ini terdiri dari 2 file yaitu ```soal2_server.c``` dan ```soal2_client.c```.
 Untuk menyelesaikan soal ini, kami menggunakan socket dan threading untuk mengkomunikasikan antara server dan client, serta thread agar game dapat berjalan secara paralel untuk masing-masing player.
 Soal ini terdiri dari 2 sisi, yaitu:
 1. Client Side
