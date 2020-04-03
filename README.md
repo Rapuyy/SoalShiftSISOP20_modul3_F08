@@ -859,5 +859,13 @@ int main()
 #
 
 ## Soal3
+Soal ini meminta kami untuk mengkategorikan file-file ke dalam folder sesuai ekstensinya.
+Di sini kami menggunakan multithreading dan rename untuk memindahkan file-file tersebut.
+Menggunakan library ```dirent.h``` untuk melakukan looping pada tiap direktori dan mengecek setiap ekstensi file.
+
+#
 
 ## Soal4
+Soal ini meminta kami untuk menghitung perkalian matriks kemudian mengolah angka-angka tersebut menjadi  faktorial penjumlahan. dan terakhir memberikan list.
+
+#
