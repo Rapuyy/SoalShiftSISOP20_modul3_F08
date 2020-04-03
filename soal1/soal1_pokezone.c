@@ -63,17 +63,22 @@ int main()
 	scanf("%c", &c);
 	if(c == 'Y')
 	{
-		DIR *d = opendir("/proc");
-		struct dirent *e;
-		char *endp;
-		while((e = readdir(d)) != NULL)
+		struct dirent *dp;
+		DIR *dfd;
+		if((dfd = opendir("/proc")) == NULL)
 		{
-			long pid = strtol(e->d_name, &endp, 10);
+			fprintf(stderr, "Can't open /proc\n");
+			return 0;
+		}
+		char *endp;
+		while((dp = readdir(dfd)) != NULL)
+		{
+			long pid = strtol(dp->d_name, &endp, 10);
 			if(*endp != '\0') continue;
 			char buffer[1024];
 			snprintf(buffer, sizeof(buffer), "/proc/%ld/cmdline", pid);
 			FILE *f = fopen(buffer, "r");
-			if(f)
+			if(f != NULL)
 			{
 				if(fgets(buffer, sizeof(buffer), f) != NULL) 
 				{
@@ -95,7 +100,7 @@ int main()
 				fclose(f);
 			}
 		}
-		closedir(d);
+		closedir(dfd);
 		int stat;
 		while(wait(&stat) > 0);
 		shmdt(vpoke);
