@@ -869,3 +869,44 @@ Menggunakan library ```dirent.h``` untuk melakukan looping pada tiap direktori d
 Soal ini meminta kami untuk menghitung perkalian matriks kemudian mengolah angka-angka tersebut menjadi  faktorial penjumlahan. dan terakhir memberikan list.
 
 #
+4a. Di bagian ini kita diminta untuk mengalikan matriks dengan ukuran 4x2 dan 2x5, yang mana hasilnya adalah matriks 4x5, dan isi dari matriks awalnya kita isi sendiri.
+```c
+.....
+for (baris = 0; baris < 4; baris++) {
+      for (kolom = 0; kolom < 5; kolom++) {
+        for (tengah = 0; tengah < 2; tengah++) {
+          sum = sum + first[baris][tengah]*second[tengah][kolom];
+        }
+ 
+        multiply[baris][kolom] = sum;
+        sum = 0;
+      }
+    }
+.....
+```
+#
+4b. setelah kita menghitung perkalian matriks tersebut, hasilnya akan dikirim ke proses *soal4b.c* menggunakan shared memory. setelah *soal4b.c* mendapat kiriman dari *soal4a.c*, matriks hasil akan dilakukan penjumlahan dari n sampai 1. lalu ditampilkan hasilnya dengan tampilan seperti matriks.
+#
+4c. di sub-soal bagian ini kita diminta untuk menjalankan mengetahui jumlah file dan folder di direktori saat ini dengan command "ls | wc -l" menggunakan IPC Pipe
+```c
+.....
+    else if(pp !=  0) //parent process
+    {
+        close(0);
+        dup2(p[0], 0);
+        close(p[0]);
+        close(p[1]);
+        char *argv[] = {"wc", "-l", NULL};
+        execv("/usr/bin/wc", argv);
+    }
+    else //child
+    {
+        close(0);
+        dup2(p[1], 1);
+        close(p[0]);
+        close(p[1]);
+        char *argv[] = {"ls", NULL};
+        execv("/bin/ls", argv);
+    }
+.....
+```
