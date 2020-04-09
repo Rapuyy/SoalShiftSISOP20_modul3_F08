@@ -886,6 +886,51 @@ for (baris = 0; baris < 4; baris++) {
 ```
 #
 4b. setelah kita menghitung perkalian matriks tersebut, hasilnya akan dikirim ke proses *soal4b.c* menggunakan shared memory. setelah *soal4b.c* mendapat kiriman dari *soal4a.c*, matriks hasil akan dilakukan penjumlahan dari n sampai 1. lalu ditampilkan hasilnya dengan tampilan seperti matriks.
+```c
+int jumlah(int n) {
+    if (n != 0)
+        return n + jumlah(n - 1);
+    else
+        return n;
+}
+
+
+void *faktorial(int angka){
+    printf("%d ", jumlah(angka));
+}
+
+void main()
+{
+    int arr[4][5], angka;
+    key_t key = 1234;
+    int *value;
+    int i, j;
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    value = shmat(shmid, NULL, 0);
+    
+    pthread_t tid[20];
+    int index;
+    for(i = 0; i < 4; i++){
+        for(j = 0; j < 5; j++){
+            arr[i][j] = *value;
+            angka = arr[i][j];
+            pthread_create(&tid[index], NULL, &faktorial, (void*) angka);
+            // printf("\nnilai index [%d][%d] = %d", i, j, *value);
+            printf("\t");
+            index++;
+            sleep(1);
+        }
+        printf("\n");
+    }
+    for (int i = 0; i < index; i++) {
+        pthread_join(tid[i], NULL);
+    }
+
+    shmdt(value);
+    shmctl(shmid, IPC_RMID, NULL);
+
+}
+```
 #
 4c. di sub-soal bagian ini kita diminta untuk menjalankan mengetahui jumlah file dan folder di direktori saat ini dengan command "ls | wc -l" menggunakan IPC Pipe
 ```c
