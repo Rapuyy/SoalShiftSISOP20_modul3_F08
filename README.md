@@ -859,9 +859,91 @@ int main()
 #
 
 ## Soal3
-Soal ini meminta kami untuk mengkategorikan file-file ke dalam folder sesuai ekstensinya.
-Di sini kami menggunakan multithreading dan rename untuk memindahkan file-file tersebut.
-Menggunakan library ```dirent.h``` untuk melakukan looping pada tiap direktori dan mengecek setiap ekstensi file.
+Soal ini meminta kami untuk mengkategorikan file-file ke dalam folder sesuai ekstensinya. Terdapat 3 mode input yakni -f, -d, dan \*. Dimana pada mode -f user dapat menambahkan argumen yang berupa full path file sebanyak yang user inginkan, pada mode -d user hanya bisa input 1 directory saja, lalu pada mode \* user akan memindahkan seluruh file berdasarkan ekstensinya. Menggunakan library ```dirent.h``` untuk melakukan looping pada tiap direktori dan mengecek setiap ekstensi file. Pada soal ini kami membuat fungsi untuk memindahkan file ke folder cwd (current working directory) per file. 
+```c
+void pindahFile(char *argv, char *cwd){
+//   printf("stringvoid = %s\n", argv);
+//   printf("stringvoid = %s\n", cwd);
+  
+  char string[1000];
+  strcpy(string, argv);
+  int isFile = is_regular_file(string);
+  char dot = '.'; 
+  char slash = '/';
+  char* tipe = strrchr(string, dot); 
+  char* nama = strrchr(string, slash);
+  
+  char tipeLow[100];
+  if(tipe)
+  {
+    if((tipe[strlen(tipe)-1] >= 'a' && tipe[strlen(tipe)-1] <= 'z') || (tipe[strlen(tipe)-1] >= 'A' && tipe[strlen(tipe)-1] <= 'Z'))
+    {
+      strcpy(tipeLow, tipe);
+      for(int i = 0; tipeLow[i]; i++){
+        tipeLow[i] = tolower(tipeLow[i]);
+      }
+    }
+  }
+  else
+  {
+    if(!isFile){
+      printf("ini adalah folder, salah argumen\n");
+    //   mkdir(nama, 0777);
+      return;
+    }
+    else
+    {
+      strcpy(tipeLow, " Unknown"); //tanpa ekstensi
+    }
+  }
+    mkdir((tipeLow + 1), 0777); //bikin folder ekstensi
+
+    size_t len = 0 ;
+    // strcpy
+    char a[1000] ; //res
+    strcpy(a, argv);
+    char b[1000] ; //des
+    strcpy(b, cwd);
+    strcat(b, "/");
+    strcat(b, tipeLow+1);
+    strcat(b, nama);
+    printf("a = %s\n", a);
+
+    printf("b = %s\n", b);
+
+    rename(a, b);
+    remove(a);
+}
+```
+untuk file banyak, yaitu command -d dan \*, ada lagi fungsi untuk memasukan setiap file yang ada di dalam folder tersebut ke sebuah string lalu di iterasi untuk semua file yang ada didalam directory tersebut.
+```c
+void sortHere(char *asal){
+  arg_struct args;
+  // args.cwd = "/home/rapuyy/modul3";
+  strcpy(args.cwd,"/home/rapuyy/modul3");
+  DIR *dirp;
+    struct dirent *entry;
+    dirp = opendir(asal);
+    int index = 0;
+    while((entry = readdir(dirp)) != NULL)
+    {
+      if(entry->d_type == DT_REG)
+      {
+        char namafile[105];
+        sprintf(namafile, "%s/%s", asal, entry->d_name);
+        strcpy(args.asal, namafile);
+        if(strcmp(namafile, "/home/rapuyy/modul3/no3.c")!=0)
+        {
+            pthread_create(&tid[index], NULL, pindahf, (void *)&args);
+            printf("%s\n", namafile);
+            sleep(1);
+            index++;    
+        }
+        
+      }
+    }
+}
+```
 
 #
 
